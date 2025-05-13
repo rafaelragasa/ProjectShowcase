@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Project Portfolio</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      display: flex;
+      height: 100vh;
+      color: #333;
+    }
+
+    .sidebar {
+      width: 30%;
+      background: #2f3542;
+      color: #fff;
+      padding: 20px;
+      overflow-y: auto;
+      box-shadow: 2px 0 10px rgba(0,0,0,0.2);
+    }
+
+    .sidebar h2 {
+      margin-top: 0;
+      font-size: 24px;
+      text-align: center;
+      border-bottom: 2px solid #57606f;
+      padding-bottom: 10px;
+    }
+
+    .project {
+      background: #57606f;
+      margin: 15px 0;
+      padding: 15px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .project:hover {
+      background: #747d8c;
+      transform: scale(1.02);
+    }
+
+    .project h3 {
+      margin: 0 0 5px 0;
+    }
+
+    .project p {
+      margin: 0;
+      font-size: 14px;
+      color: #dfe4ea;
+    }
+
+    .content {
+      flex: 1;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: #f1f2f6;
+    }
+
+    .content img {
+      max-width: 90%;
+      max-height: 60vh;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+      transition: all 0.3s;
+    }
+
+    .content h3 {
+      margin-bottom: 10px;
+      font-size: 22px;
+    }
+
+    .content p {
+      max-width: 600px;
+      text-align: center;
+      font-size: 16px;
+      color: #555;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        width: 100%;
+        height: auto;
+      }
+
+      .content {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="sidebar">
+    <h2>My Projects</h2>
+
+    <div class="project" onclick="showProject('project 1.jpg', 'Cumulative Sum', 'This project calculates the cumulative sum of an array using efficient loop structures in Python.')">
+      <h3>Project 1: Cumulative Sum</h3>
+      <p>Calculates a running total of numbers.</p>
+    </div>
+
+    <div class="project" onclick="showProject('project 2.jpg', 'Algorithm Implementation', 'Implemented several sorting and searching algorithms, including Bubble Sort, Merge Sort, and Binary Search.')">
+      <h3>Project 2: Algorithm Implementation</h3>
+      <p>Includes various classic algorithms in code.</p>
+    </div>
+
+    <div class="project" onclick="showProject('project 3.jpg', 'Shortest Path', 'Built a visualizer for Dijkstra’s and A* algorithms to compute the shortest path in a grid environment.')">
+      <h3>Project 3: Shortest Path</h3>
+      <p>Pathfinding visualizer using graph algorithms.</p>
+    </div>
+
+    <div class="project" onclick="showProject('project 4.png', 'Chatbot', 'Developed a simple rule-based chatbot using Python that can answer basic user queries and perform small tasks.')">
+      <h3>Project 4: Chatbot</h3>
+      <p>Interactive rule-based chatbot application.</p>
+    </div>
+  </div>
+
+  <div class="content">
+    <img id="project-image" src="project 1.jpg" alt="Project Preview" />
+    <h3 id="project-title">Cumulative Sum</h3>
+    <p id="project-desc">This project calculates the cumulative sum of an array using efficient loop structures in Python.</p>
+  </div>
+
+  <script>
+    function showProject(imagePath, title, description) {
+      document.getElementById('project-image').src = imagePath;
+      document.getElementById('project-title').textContent = title;
+      document.getElementById('project-desc').textContent = description;
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AlgoBot - Heuristic Algorithms Expert</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+    --primary: #6c584c;             
+    --primary-dark: #4a4033;
+    --secondary: #a98467;            
+    --accent: #adc178;              
+    --background: linear-gradient(135deg, #fefae0, #e6ccb2); 
+    --surface: rgba(255, 255, 255, 0.7);
+    --border: rgba(0, 0, 0, 0.1);
+    --text-primary: #3e3e3e;
+    --text-secondary: #6b705c;
+    --glass-blur: blur(8px);
+    --glass-opacity: 0.5;
+ }
+
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--background);
+            color: var(--text-primary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .app-container {
+            max-width: 900px;
+            width: 100%;
+            backdrop-filter: var(--glass-blur);
+            background: var(--surface);
+            padding: 1.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            height: 90vh;
+        }
+
+        header {
+            text-align: center;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border-radius: 1rem 1rem 0 0;
+            font-weight: 600;
+            font-size: 2rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 1rem;
+            overflow: hidden;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            border-radius: 0.5rem;
+            backdrop-filter: var(--glass-blur);
+            background: rgba(255, 255, 255, var(--glass-opacity));
+            box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.1);
+            font-size: 1.1rem;
+            line-height: 1.5;
+        }
+
+        .message {
+            padding: 0.75rem;
+            margin: 0.5rem 0;
+            border-radius: 10px;
+        }
+
+        .user {
+            background: var(--primary);
+            align-self: flex-end;
+            text-align: right;
+            color: white;
+        }
+
+        .bot {
+            background: var(--secondary);
+            align-self: flex-start;
+            text-align: left;
+            color: white;
+        }
+
+        .input-area {
+            display: flex;
+            padding: 1rem;
+            border-top: 2px solid var(--border);
+        }
+
+        #user-input {
+            flex: 1;
+            padding: 1rem;
+            border-radius: 2rem;
+            border: none;
+            font-size: 1.1rem;
+            background: rgba(255, 255, 255, 0.2);
+            color: var(--text-primary);
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        #user-input:focus {
+            box-shadow: 0 0 8px var(--secondary);
+        }
+
+        #send-button {
+            background: var(--secondary);
+            color: white;
+            border: none;
+            padding: 1rem 1.5rem;
+            margin-left: 0.5rem;
+            border-radius: 2rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        #send-button:hover {
+            background: #DB2777;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <header>Tanungan ng Bayan Chatbot</header>
+        <div class="chat-container">
+            <div class="chat-messages" id="messages"></div>
+            <form id="chat-form" class="input-area">
+                <input type="text" id="user-input" placeholder="Ask about heuristic algorithms..." autocomplete="off">
+                <button type="submit" id="send-button">Send</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById("chat-form");
+        const userInput = document.getElementById("user-input");
+        const messagesDiv = document.getElementById("messages");
+
+        form.addEventListener("submit", function (event) {
+            event.preventDefault();
+            const message = userInput.value.trim();
+            if (message) {
+                // User message
+                const userMessage = document.createElement("p");
+                userMessage.classList.add("message", "user");
+                userMessage.innerHTML = `<strong>You:</strong> ${message}`;
+                messagesDiv.appendChild(userMessage);
+                messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+                // Temporary bot typing message
+                const botMessage = document.createElement("p");
+                botMessage.classList.add("message", "bot");
+                botMessage.innerHTML = `<strong>Bot:</strong> <em>typing...</em>`;
+                messagesDiv.appendChild(botMessage);
+                messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+                // Fetch reply from backend
+                fetch("/chat", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ message: message })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    botMessage.innerHTML = `<strong>Bot:</strong> ${data.response || "No response received."}`;
+                    userInput.value = "";
+                })
+                .catch(() => {
+                    botMessage.innerHTML = `<strong>Error:</strong> Something went wrong!`;
+                });
+            }
+        });
+    </script>
+</body>
+</html>

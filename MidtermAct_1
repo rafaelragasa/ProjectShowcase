@@ -1,0 +1,48 @@
+import seaborn as sns
+import networkx as nx
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Load and process data
+file_path = "Students_Grading_Dataset.csv"
+df = pd.read_csv(file_path)
+students, sleep_hours = df['First_Name'].tolist(), df['Sleep_Hours_per_Night'].astype(float).tolist()
+
+# Build weighted graph
+def build_graph(students, sleep_hours):
+    G = nx.Graph()
+    for i, s1 in enumerate(students):
+        for j, s2 in enumerate(students[i+1:], i+1):
+            G.add_edge(s1, s2, weight=abs(sleep_hours[i] - sleep_hours[j]))
+    return G
+
+# Visualize graph with shortest paths
+def visualize_graph(G, shortest_paths, start):
+    pos = nx.spring_layout(G)
+    plt.figure(figsize=(12, 6))
+    nx.draw(G, pos, with_labels=True, node_color='lightblue', node_size=3000, edge_color='gray')
+    for path in shortest_paths.values():
+        nx.draw_networkx_edges(G, pos, edgelist=[(path[i], path[i+1]) for i in range(len(path)-1)], edge_color='red', width=2)
+    plt.title("Optimized Sleep Hours Path Graph")
+    plt.show()
+    
+    # Bar chart visualization
+    plt.figure(figsize=(12, 6))
+    sns.barplot(x=students, y=sleep_hours, palette="Blues_r") 
+    plt.xticks(rotation=45)
+    plt.xlabel('Students')
+    plt.ylabel('Sleep Hours per Night')
+    plt.title('Student Sleep Patterns')
+    plt.show()
+
+# Run graph processing
+graph = build_graph(students, sleep_hours)
+start_student = students[0]
+shortest_paths = {s: nx.dijkstra_path(graph, source=start_student, target=s, weight='weight') for s in students if s != start_student}
+
+# Display results
+print(f"Shortest paths from {start_student}:")
+for student, path in shortest_paths.items():
+    print(f"To {student}: {path}")
+
+visualize_graph(graph, shortest_paths, start_student)
