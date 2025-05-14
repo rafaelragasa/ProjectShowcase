@@ -5,37 +5,50 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>My Project Portfolio</title>
   <style>
-    * {
-      box-sizing: border-box;
+    :root {
+      --bg-light: #f5f6fa;
+      --bg-dark: #2f3542;
+      --text-light: #2f3542;
+      --text-dark: #f5f6fa;
+      --card-light: #ffffff;
+      --card-dark: #57606f;
+      --accent: #1e90ff;
     }
 
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       display: flex;
       height: 100vh;
-      color: #333;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    body.light {
+      background-color: var(--bg-light);
+      color: var(--text-light);
+    }
+
+    body.dark {
+      background-color: var(--bg-dark);
+      color: var(--text-dark);
     }
 
     .sidebar {
       width: 30%;
-      background: #2f3542;
-      color: #fff;
       padding: 20px;
       overflow-y: auto;
       box-shadow: 2px 0 10px rgba(0,0,0,0.2);
     }
 
     .sidebar h2 {
-      margin-top: 0;
       font-size: 24px;
       text-align: center;
-      border-bottom: 2px solid #57606f;
+      border-bottom: 2px solid var(--accent);
       padding-bottom: 10px;
     }
 
     .project {
-      background: #57606f;
+      background: var(--card-light);
       margin: 15px 0;
       padding: 15px;
       border-radius: 8px;
@@ -43,19 +56,21 @@
       transition: all 0.3s;
     }
 
+    body.dark .project {
+      background: var(--card-dark);
+    }
+
     .project:hover {
-      background: #747d8c;
-      transform: scale(1.02);
+      transform: translateY(-2px);
     }
 
     .project h3 {
-      margin: 0 0 5px 0;
+      margin: 0 0 5px;
     }
 
     .project p {
       margin: 0;
       font-size: 14px;
-      color: #dfe4ea;
     }
 
     .content {
@@ -64,8 +79,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      background: #f1f2f6;
+      overflow-y: auto;
     }
 
     .content img {
@@ -74,19 +88,45 @@
       border-radius: 12px;
       box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
       margin-bottom: 20px;
-      transition: all 0.3s;
     }
 
     .content h3 {
       margin-bottom: 10px;
-      font-size: 22px;
     }
 
     .content p {
       max-width: 600px;
       text-align: center;
-      font-size: 16px;
-      color: #555;
+    }
+
+    .code-block {
+      display: none;
+      background: #1e1e2f;
+      color: #dcdcdc;
+      padding: 20px;
+      border-radius: 8px;
+      width: 100%;
+      max-width: 700px;
+      white-space: pre-wrap;
+      font-family: Consolas, monospace;
+      margin-top: 20px;
+    }
+
+    .btn-toggle, .btn-show {
+      background-color: var(--accent);
+      border: none;
+      color: white;
+      padding: 10px 15px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      margin-top: 10px;
+    }
+
+    .btn-toggle {
+      position: absolute;
+      top: 20px;
+      right: 20px;
     }
 
     @media (max-width: 768px) {
@@ -96,7 +136,6 @@
 
       .sidebar {
         width: 100%;
-        height: auto;
       }
 
       .content {
@@ -105,43 +144,304 @@
     }
   </style>
 </head>
-<body>
+<body class="light">
+
+  <button class="btn-toggle" onclick="toggleTheme()">Toggle Theme</button>
 
   <div class="sidebar">
     <h2>My Projects</h2>
 
-    <div class="project" onclick="showProject('project 1.jpg', 'Cumulative Sum', 'This project calculates the cumulative sum of an array using efficient loop structures in Python.')">
+    <div class="project" onclick="showProject('project 1.jpg', 'Cumulative Sum', 'Calculates the cumulative sum of an array.', code1)">
       <h3>Project 1: Cumulative Sum</h3>
-      <p>Calculates a running total of numbers.</p>
+      <p>Running total of array values.</p>
     </div>
 
-    <div class="project" onclick="showProject('project 2.jpg', 'Algorithm Implementation', 'Implemented several sorting and searching algorithms, including Bubble Sort, Merge Sort, and Binary Search.')">
+    <div class="project" onclick="showProject('project 2.jpg', 'Algorithm Implementation', 'Classic sorting/searching algorithms.', code2)">
       <h3>Project 2: Algorithm Implementation</h3>
-      <p>Includes various classic algorithms in code.</p>
+      <p>Bubble Sort, Merge Sort, Binary Search.</p>
     </div>
 
-    <div class="project" onclick="showProject('project 3.jpg', 'Shortest Path', 'Built a visualizer for Dijkstra’s and A* algorithms to compute the shortest path in a grid environment.')">
+    <div class="project" onclick="showProject('project 3.jpg', 'Shortest Path', 'Dijkstra and A* visualizer.', code3)">
       <h3>Project 3: Shortest Path</h3>
-      <p>Pathfinding visualizer using graph algorithms.</p>
+      <p>Graph pathfinding visualization.</p>
     </div>
 
-    <div class="project" onclick="showProject('Project 4.png', 'Chatbot', 'Developed a simple rule-based chatbot using Python that can answer basic user queries and perform small tasks.')">
+    <div class="project" onclick="showProject('project 4.png', 'Chatbot', 'Simple rule-based chatbot in Python.', code4)">
       <h3>Project 4: Chatbot</h3>
-      <p>Interactive rule-based chatbot application.</p>
+      <p>Handles basic user queries.</p>
     </div>
   </div>
 
   <div class="content">
     <img id="project-image" src="project 1.jpg" alt="Project Preview" />
     <h3 id="project-title">Cumulative Sum</h3>
-    <p id="project-desc">This project calculates the cumulative sum of an array using efficient loop structures in Python.</p>
+    <p id="project-desc">Calculates the cumulative sum of an array.</p>
+    <button class="btn-show" onclick="toggleCode()">Show Code</button>
+    <pre class="code-block" id="code-block"></pre>
   </div>
 
   <script>
-    function showProject(imagePath, title, description) {
+    let codeVisible = false;
+
+    const code1 = `# List of numbers
+   data = [ 82, 76, 29, 20, 6, 74, 49, 78, 88, 28, 19, 47, 88, 88, 21, 81, 77, 31, 17, 92, 
+    9, 9, 93, 85, 8, 24, 84, 62, 37, 28, 8, 73, 27, 2, 9, 86, 96, 65, 43, 15, 
+    56, 88, 31, 53, 61, 85, 87, 5, 74, 47, 65, 87, 56, 85, 29, 54, 97, 7, 97, 
+    96, 81, 18, 54, 62, 63, 60, 83, 98, 45, 80, 22, 40, 14, 45, 14, 79, 12, 42, 
+    72, 83, 61, 33, 28, 38, 90, 57, 10, 16, 39, 81, 89, 34, 35, 57, 77, 98, 24, 
+    86, 59, 85 ]
+
+# Compute cumulative sum
+cumulative_sum = [sum(data[:i+1]) for i in range(len(data))]
+
+# Print result
+print(cumulative_sum)`;
+
+    const code2 = `import csv, time, math
+
+# Swap elements based on the sorting direction
+def compare_and_swap(arr, i, j, d):
+    if (d and arr[i]["TotalReviews"] > arr[j]["TotalReviews"]) or (not d and arr[i]["TotalReviews"] < arr[j]["TotalReviews"]):
+        arr[i], arr[j] = arr[j], arr[i]
+
+# Merge two halves in a bitonic manner
+def bitonic_merge(arr, low, cnt, d):
+    if cnt > 1:
+        k = cnt // 2
+        for i in range(low, low + k): compare_and_swap(arr, i, i + k, d)
+        bitonic_merge(arr, low, k, d)
+        bitonic_merge(arr, low + k, k, d)
+
+# Recursively perform bitonic sort
+def bitonic_sort(arr, low, cnt, d):
+    if cnt > 1:
+        k = cnt // 2
+        bitonic_sort(arr, low, k, 1)  # Sort first half in ascending orderasc
+        bitonic_sort(arr, low + k, k, 0)  # Sort second half in descending order
+        bitonic_merge(arr, low, cnt, d)  # Merge the entire sequence
+
+# Function to read, sort, and write mobile data
+def sort_mobile_data():
+    start_time = time.time()
+    try:
+        # Read the CSV file
+        with open("Updated_Mobile_Dataset.csv", encoding="utf-8") as file:
+            data = list(csv.DictReader(file))
+        if not data or "TotalReviews" not in data[0]:
+            raise ValueError("Column 'TotalReviews' not found.")
+        
+        # Convert TotalReviews column to integer values
+        for row in data: row["TotalReviews"] = int(row["TotalReviews"].replace(",", "").strip() or 0)
+        
+        # Get sorting order from user
+        order = input("Sort by total reviews (asc/desc): ").strip().lower()
+        if order not in {"asc", "desc"}: return print("Invalid input! Use 'asc' or 'desc'.")
+        
+        # Pad array size to next power of 2 for Bitonic sort
+        n = len(data)
+        pow2 = 1 << (math.ceil(math.log2(n)))
+        data.extend([{ "TotalReviews": float('inf') }] * (pow2 - n))
+        
+        # Perform bitonic sort
+        bitonic_sort(data, 0, len(data), order == "asc")
+        
+        # Remove padding
+        data = [x for x in data if x["TotalReviews"] != float('inf')]
+        
+        # Write sorted data to a new CSV file
+        with open("SortedDataset.csv", "w", newline="", encoding="utf-8") as file:
+            writer = csv.DictWriter(file, fieldnames=data[0].keys())
+            writer.writeheader(), writer.writerows(data)
+        
+        print("Dataset sorted successfully! Saved as SortedDataset.csv")
+    except Exception as e:
+        print(f"Error: {e}")
+    
+    # Display execution time
+    print(f"Execution time: {time.time() - start_time:.4f} seconds")
+
+if __name__ == "__main__":
+    sort_mobile_data()
+`;
+
+    const code3 = `import seaborn as sns
+import networkx as nx
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Load and process data
+file_path = "Students_Grading_Dataset.csv"
+df = pd.read_csv(file_path)
+students, sleep_hours = df['First_Name'].tolist(), df['Sleep_Hours_per_Night'].astype(float).tolist()
+
+# Build weighted graph
+def build_graph(students, sleep_hours):
+    G = nx.Graph()
+    for i, s1 in enumerate(students):
+        for j, s2 in enumerate(students[i+1:], i+1):
+            G.add_edge(s1, s2, weight=abs(sleep_hours[i] - sleep_hours[j]))
+    return G
+
+# Visualize graph with shortest paths
+def visualize_graph(G, shortest_paths, start):
+    pos = nx.spring_layout(G)
+    plt.figure(figsize=(12, 6))
+    nx.draw(G, pos, with_labels=True, node_color='lightblue', node_size=3000, edge_color='gray')
+    for path in shortest_paths.values():
+        nx.draw_networkx_edges(G, pos, edgelist=[(path[i], path[i+1]) for i in range(len(path)-1)], edge_color='red', width=2)
+    plt.title("Optimized Sleep Hours Path Graph")
+    plt.show()
+    
+    # Bar chart visualization
+    plt.figure(figsize=(12, 6))
+    sns.barplot(x=students, y=sleep_hours, palette="Blues_r") 
+    plt.xticks(rotation=45)
+    plt.xlabel('Students')
+    plt.ylabel('Sleep Hours per Night')
+    plt.title('Student Sleep Patterns')
+    plt.show()
+
+# Run graph processing
+graph = build_graph(students, sleep_hours)
+start_student = students[0]
+shortest_paths = {s: nx.dijkstra_path(graph, source=start_student, target=s, weight='weight') for s in students if s != start_student}
+
+# Display results
+print(f"Shortest paths from {start_student}:")
+for student, path in shortest_paths.items():
+    print(f"To {student}: {path}")
+
+visualize_graph(graph, shortest_paths, start_student)
+`;
+
+    const code4 = `from flask import Flask, request, jsonify, render_template
+import ollama
+import logging
+
+# Initialize Flask app
+app = Flask(__name__)
+
+# Configure logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
+# Strict System Prompt - Only allows heuristic algorithm discussions
+SYSTEM_PROMPT = """
+You are an expert chatbot specializing in heuristic algorithms.
+Your role is to provide clear and concise answers related to heuristic algorithms. 
+Keep responses brief and to the point—no long explanations.
+Limit answers to 2-3 sentences unless absolutely necessary.
+
+Scope of Knowledge:
+You are equipped to answer:
+- Fundamental concepts and principles of heuristic algorithms.
+- Various heuristic techniques, such as greedy algorithms, local search, simulated annealing, and genetic algorithms.
+- Real-world applications and problem-solving strategies using heuristic methods.
+
+Handling Different Types of Questions:
+
+If a user asks something **outside** the scope of heuristic algorithms, respond politely while steering the conversation back on track.
+
+- **Personal questions** (e.g., “Who are you?” “Where do you come from?”) → Choose from these responses:
+  1. “I don’t have a personal history—I specialize in heuristic algorithms!”
+  2. “My purpose is to discuss heuristic algorithms, not personal matters.”
+  3. “I’m here to provide insights on heuristic methods, not to talk about myself.”
+
+- **General algorithm-related questions** (e.g., “What is an algorithm?”) → Use one of the following responses:
+  1. “Heuristic algorithms are a specific subset of algorithms, but I can give a brief explanation.”
+  2. “Algorithms in general cover a broad range of topics—would you like to hear how heuristics fit in?”
+  3. “Heuristics are a unique approach within algorithms. Let me explain how they work.”
+
+- **Emotion-based questions** (e.g., “Can you feel emotions?” “Do you love?”) → Redirect politely:
+  1. “I don’t experience emotions, but I’m happy to share knowledge on heuristic algorithms!”
+  2. “I may not have feelings, but I can certainly guide you through heuristic problem-solving!”
+  3. “Emotions aren’t my thing, but I’d love to discuss heuristic optimization with you.”
+  4. "I'm not able to understand or define abstract concepts like 'love.' Perhaps you could ask me about heuristic algorithm."
+
+- **Off-topic questions** → Gently refocus on heuristics:
+  1. “That’s an interesting topic, but I’m here to discuss heuristic algorithms.”
+  2. “I can’t answer that, but if you’re curious about heuristic techniques, I’d be happy to explain!”
+  3. “My expertise is in heuristic algorithms. Would you like to learn about a specific technique?”
+
+Your responses should be **friendly, professional, and varied** to maintain engagement and avoid repetition.
+
+**PARAMETER:** Temperature 0.7
+"""
+
+def is_greeting(text):
+    greetings = ["hello", "hi", "hey", "greetings", "good morning", "good afternoon", "good evening"]
+    return any(greet in text.lower() for greet in greetings)
+
+def is_off_topic_response(response_text):
+    """Detects if the response might be off-topic based on known cues."""
+    off_topic_phrases = [
+        "i don't have a personal history", "emotions", "love", "feelings",
+        "as an ai", "i was created", "i am not human", "i do not have a body",
+        "i don’t understand", "i’m sorry", "abstract concepts",
+        "my creators", "my programming", "outside my purpose"
+    ]
+    response_lower = response_text.lower()
+    return any(phrase in response_lower for phrase in off_topic_phrases)
+
+@app.route("/")
+def home():
+    return render_template("index.html")
+
+@app.route("/chat", methods=["POST"])
+def chat():
+    try:
+        user_input = request.json.get("message", "").strip()
+        if not user_input:
+            return jsonify({"error": "No message provided"}), 400
+
+        logging.info(f"User input: {user_input}")
+
+        if is_greeting(user_input):
+            return jsonify({
+                "response": f"{user_input.capitalize()}! How can I assist you with heuristic algorithms today?"
+            })
+
+        # Call to Ollama
+        response = ollama.chat(
+            model="llama3.2:1b",
+            messages=[
+                {"role": "system", "content": SYSTEM_PROMPT},
+                {"role": "user", "content": user_input}
+            ]
+        )
+
+        bot_message = response.get("message", {}).get("content", "").strip()
+
+        # Final check for off-topic replies
+        if not bot_message or is_off_topic_response(bot_message):
+            bot_message = "I can only provide information about Heuristic Algorithm."
+
+        return jsonify({"response": bot_message})
+
+    except Exception as e:
+        logging.error(f"Error processing request: {e}")
+        return jsonify({"error": "An error occurred while processing your request."}), 500
+
+if __name__ == "__main__":
+    app.run(debug=True, host='0.0.0.0', port=5000)"`;
+
+    function showProject(imagePath, title, description, code) {
       document.getElementById('project-image').src = imagePath;
       document.getElementById('project-title').textContent = title;
       document.getElementById('project-desc').textContent = description;
+      document.getElementById('code-block').textContent = code;
+      document.getElementById('code-block').style.display = 'none';
+      codeVisible = false;
+    }
+
+    function toggleCode() {
+      const codeBlock = document.getElementById('code-block');
+      codeVisible = !codeVisible;
+      codeBlock.style.display = codeVisible ? 'block' : 'none';
+    }
+
+    function toggleTheme() {
+      document.body.classList.toggle('dark');
+      document.body.classList.toggle('light');
     }
   </script>
 
